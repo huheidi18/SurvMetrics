@@ -166,11 +166,11 @@ Brier <- function(object, pre_sp, t_star = -1) {
   for (i in c(1:length(time))) {
     # survival time is less than t_star and sample died
     if (time[i] < t_star & (status[i] == 1)) {
-      Gti <- Gt(Surv(time, status), time[i])
+      Gti <- Gt(object, time[i])
       if (is.na(Gti)) {
         next
       }
-      sum_before_t <- sum_before_t + 1 / Gti * (pre_sp[i]) ^ 2 # IPCW
+      sum_before_t <- sum_before_t + 1/Gti * (pre_sp[i])^2
       next
     }
     # survival time is greater than t_star
@@ -178,12 +178,9 @@ Brier <- function(object, pre_sp, t_star = -1) {
       if (is.na(Gtstar)) {
         next
       }
-      sum_after_t <-
-        sum_after_t + 1 / Gt(Surv(time, status), t_star) * (1 -
-                                                              pre_sp[i]) ^ 2
+      sum_after_t <- sum_after_t + 1/Gtstar * (1 - pre_sp[i])^2
     } # IPCW
   }
-
   BSvalue <- (sum_before_t + sum_after_t) / length(time)
   names(BSvalue) <- "Brier Score"
 
